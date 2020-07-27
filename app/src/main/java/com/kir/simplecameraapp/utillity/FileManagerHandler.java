@@ -18,7 +18,7 @@ public class FileManagerHandler {
     public static String TAG = "Test_TAG";
 
     public static void createVideoFolder(){
-        mVideoFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "scVideo");
+        mVideoFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
         if(!mVideoFolder.exists()){
             boolean dirCreated = mVideoFolder.mkdirs();
             if (!dirCreated)
@@ -29,8 +29,8 @@ public class FileManagerHandler {
     public static File createVideoFileName() throws IOException {
         createVideoFolder();
         @SuppressLint("SimpleDateFormat") String timestamp = new SimpleDateFormat("yyyyMMdd__HHmmsss").format(new Date());
-        String prepend = "VIDEO_" + timestamp + "_";
-        File videoFile = File.createTempFile(prepend, ".mp4", mVideoFolder);
+        String prepend = "VID_" + timestamp;
+        File videoFile = new File(mVideoFolder, prepend + ".mp4");
         mVideoFileName = videoFile.getAbsolutePath();
         return videoFile;
     }
