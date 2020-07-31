@@ -27,6 +27,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.kir.simplecameraapp.utillity.CameraHandler;
+import com.kir.simplecameraapp.utillity.CameraMode;
 import com.kir.simplecameraapp.utillity.FileManagerHandler;
 
 import java.io.IOException;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 0;
     private static final int REQUEST_CAMERA_PERMISSION_RESULT = 1;
+
+    private CameraMode mCameraMode = CameraMode.VIDEO;
 
     private ImageButton mRecordImageButton;
     private TextureView mTextureView;
@@ -70,11 +73,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        hideSystemUI();
         setContentView(R.layout.activity_main);
-        checkPermission();
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -83,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         });
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest); checkPermission();
+
+        checkPermission();
 
         mTextureView = findViewById(R.id.textureView);
         CameraHandler.mTextureView = mTextureView;
@@ -91,22 +97,28 @@ public class MainActivity extends AppCompatActivity {
         mRecordImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(CameraHandler.mIsRecording) {
-                    CameraHandler.mIsRecording = false;
-                    mRecordImageButton.setImageResource(R.drawable.camera_btn_ready);
-                    CameraHandler.startPreview();
-                    FileManagerHandler.mMediaRecorder.stop();
-                    FileManagerHandler.mMediaRecorder.reset();
-                } else {
-                    CameraHandler.mIsRecording = true;
-                    mRecordImageButton.setImageResource(R.drawable.camera_btn_busy);
-                    try {
-                        FileManagerHandler.createVideoFileName();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (mCameraMode == CameraMode.VIDEO) {
+                    if (CameraHandler.mIsRecording) {
+                        CameraHandler.mIsRecording = false;
+                        mRecordImageButton.setImageResource(R.drawable.camera_btn_ready);
+                        CameraHandler.startPreview();
+                        FileManagerHandler.mMediaRecorder.stop();
+                        FileManagerHandler.mMediaRecorder.reset();
+                    } else {
+                        CameraHandler.mIsRecording = true;
+                        mRecordImageButton.setImageResource(R.drawable.camera_btn_busy);
+                        try {
+                            FileManagerHandler.createVideoFileName();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        CameraHandler.startRecord(mTextureView);
+                        FileManagerHandler.mMediaRecorder.start();
                     }
-                    CameraHandler.startRecord(mTextureView);
-                    FileManagerHandler.mMediaRecorder.start();
+                } else if (mCameraMode == CameraMode.PHOTO){
+                    return;
+                } else {
+                    return;
                 }
             }
         });
@@ -136,19 +148,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        View decorView = getWindow().getDecorView();
         if (hasFocus) {
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_IMMERSIVE
-                            // Set the content to appear under the system bars so that the
-                            // content doesn't resize when the system bars hide and show.
-                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            // Hide the nav bar and status bar
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
+            hideSystemUI();
         }
     }
 
@@ -207,5 +208,19 @@ public class MainActivity extends AppCompatActivity {
                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+    }
+
+    private void hideSystemUI(){
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 }
