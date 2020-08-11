@@ -10,13 +10,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Набор функций для взаимодействия с файловой системой устройства
+ */
 public class FileManagerHandler {
+    /** Handler файловой системы */
     public static MediaRecorder mMediaRecorder = new MediaRecorder();
+    /** Путь к папке для сохранения файлов */
     public static File mVideoFolder;
+    /** Название файла для сохранения */
     public static String mVideoFileName;
 
     public static String TAG = "Test_TAG";
 
+    /**
+     * Создает папку для сохранения файлов. По умолчанию папка Camera
+     */
     public static void createVideoFolder(){
         mVideoFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
         if(!mVideoFolder.exists()){
@@ -26,6 +35,11 @@ public class FileManagerHandler {
         }
     }
 
+    /**
+     * Создает название файла для сохранения
+     * @return Название файла
+     * @throws IOException Ошибка ввода/вывода
+     */
     public static File createVideoFileName() throws IOException {
         createVideoFolder();
         @SuppressLint("SimpleDateFormat") String timestamp = new SimpleDateFormat("yyyyMMdd__HHmmsss").format(new Date());
@@ -35,6 +49,10 @@ public class FileManagerHandler {
         return videoFile;
     }
 
+    /**
+     * Подключает handler файловой системы
+     * @throws IOException Ошибка ввода/вывода
+     */
     public static void setupMediaRecorder() throws IOException {
         mMediaRecorder.reset();
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);

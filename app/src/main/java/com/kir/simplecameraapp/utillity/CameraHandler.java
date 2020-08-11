@@ -24,24 +24,47 @@ import java.util.Comparator;
 import java.util.List;
 
 
+/**
+ * Набор методов для взаимодействия с камерой устройства
+ */
 public class CameraHandler {
+    /** id текущей камеры */
     public static String mCameraId;
+    /** Текущее состояния камеры */
     public static boolean mIsRecording = false;
 
+    /** Handler текущей камеры */
     public static CameraDevice mCameraDevice;
+    /**
+     * Обрабатывает события камеры
+     */
     public static CameraDevice.StateCallback mCameraDeviceStateCallback = new CameraDevice.StateCallback() {
+
+        /**
+         * Исполняет инструкции при открытии камеры
+         * @param cameraDevice Handler текущей камеры
+         */
         @Override
         public void onOpened(@NonNull CameraDevice cameraDevice) {
             mCameraDevice = cameraDevice;
             startPreview();
         }
 
+        /**
+         * Исполняте инструкции при отключении камеры
+         * @param cameraDevice Handler текущей камеры
+         */
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             mCameraDevice = null;
             cameraDevice.close();
         }
 
+        /**
+         * Исполняет инструкции при закрытии камеры
+         * @param cameraDevice Handler текущей камеры
+         * @param i Error code
+         */
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int i) {
             mCameraDevice = null;
@@ -49,13 +72,24 @@ public class CameraHandler {
         }
     };
 
+    /** Размер превью UI элемента */
     public static Size mPreviewSize;
+    /** Разрешение видео */
     public static Size mVideoSize;
+
     public static CaptureRequest.Builder mCaptureRequestBuilder;
 
+    /** Handler потока камеры */
     public static Handler mBackgroundHandler;
+    /** Handler элемента отображения превью */
     public static TextureView mTextureView;
 
+    /**
+     * Предоставляет программе доступ к задней камере
+     * @param width Ширина изображения
+     * @param height Высота изображения
+     * @param CameraService Информация о камерах на устройсвтве
+     */
     public static void setupCamera (int width, int height, Object CameraService){
         CameraManager cameraManager = (CameraManager) CameraService;
         try {
@@ -73,6 +107,10 @@ public class CameraHandler {
         }
     }
 
+    /**
+     * Запускает запись видео
+     * @param mTextureView  Handler элемента для отображения изображения
+     */
     public static void startRecord(TextureView mTextureView){
         try {
             FileManagerHandler.setupMediaRecorder();
@@ -106,6 +144,9 @@ public class CameraHandler {
         }
     }
 
+    /**
+     * Отображает изображение с камеры в пользовательский интерфейс
+     */
     public static void startPreview(){
         SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
         surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
@@ -137,6 +178,13 @@ public class CameraHandler {
         }
     }
 
+    /**
+     * Выбирает оптимальный размер изображения для экрана устройства
+     * @param choices Возможные разрешения устройства
+     * @param width Ширина экрана
+     * @param height Высота экрана
+     * @return Оптимальное разрешение изображения
+     */
     private static Size chooseOptimalSize(Size[] choices, int width, int height){
         List<Size> bigEnough = new ArrayList<Size>();
         for(Size option : choices){
@@ -152,6 +200,9 @@ public class CameraHandler {
         }
     }
 
+    /**
+     * Закрывает камеру, освобождая ресурсы
+     */
     public static void closeCamera(){
         if(mCameraDevice != null){
             mCameraDevice.close();
@@ -159,8 +210,17 @@ public class CameraHandler {
         }
     }
 
+    /**
+     * Структура для сравнения разрешений изображения
+     */
     private static class CompareSizeByArea implements Comparator<Size> {
 
+        /**
+         * Сравнивает разрешения по кол-ву пикилей
+         * @param size Разрешение первого изображения
+         * @param t1 Разрешение второго изображения
+         * @return Наименьшее изображение по кол-ву пикселей
+         */
         @Override
         public int compare(Size size, Size t1) {
             return Long.signum((long) size.getWidth() * size.getHeight() /

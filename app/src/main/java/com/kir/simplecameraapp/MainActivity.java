@@ -32,7 +32,11 @@ import com.kir.simplecameraapp.utillity.FileManagerHandler;
 
 import java.io.IOException;
 
-
+/**
+ * Базовый класс главной активности
+ * @author Полтораднев Кирилл
+ * @version 1.0
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 0;
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
+    /**
+     * Инициализирует UI, камеру устройства, проверку user permissions
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         });
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest); checkPermission();
+        mAdView.loadAd(adRequest);
 
         checkPermission();
 
@@ -124,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Инициализирует проверку пользовательских разрешении и
+     * запускает поток камеры после перезапуска приложения
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -138,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Освобождает занятые рессурсы при выходе из приложения
+     */
     @Override
     protected void onPause() {
         CameraHandler.closeCamera();
@@ -145,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * Переводит UI в режим полного экрана без панелей управления
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -153,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Оповещает пользователя о статусе проверки пользовательских решений
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -165,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Безопасно подключает камеру устройства
+     */
     private void connectCamera() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
@@ -183,6 +206,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Запускает поток камеры
+     */
     private void startBackgroundThread(){
         mBackgroundHandlerThread = new HandlerThread("SimpleCamera");
         mBackgroundHandlerThread.start();
@@ -190,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         CameraHandler.mBackgroundHandler = mBackgroundHandler;
     }
 
+    /**
+     * Закрывает поток камеры
+     */
     private void stopBackgroundThread(){
         mBackgroundHandlerThread.quitSafely();
         try {
@@ -202,6 +231,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Осуществляет проверку и запрос пользовательских разрешений
+     */
     private void checkPermission() {
         if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
@@ -210,6 +242,9 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
     }
 
+    /**
+     * Скрывает лишние элементы базового UI
+     */
     private void hideSystemUI(){
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
