@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1097209262847",
+    "firebase_url": "https://hdphotocamerapro.firebaseio.com",
+    "project_id": "hdphotocamerapro",
+    "storage_bucket": "hdphotocamerapro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097209262847:android:2b2b29b7a22c7af24a92ca",
+        "android_client_info": {
+          "package_name": "com.kir.simplecameraapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097209262847-q1u16gssd0ja9vb6pf5s5a9fijpkjid1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApgH1EGr2biMlQ7KV9ZZ0EH4P5R5O4piE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097209262847-q1u16gssd0ja9vb6pf5s5a9fijpkjid1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

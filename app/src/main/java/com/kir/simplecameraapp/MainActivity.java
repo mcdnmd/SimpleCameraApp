@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -31,6 +30,13 @@ import com.kir.simplecameraapp.utillity.CameraMode;
 import com.kir.simplecameraapp.utillity.FileManagerHandler;
 
 import java.io.IOException;
+
+/**
+ *  \maingape HD Photo Camera Pro
+ *
+ *  Приложение разработано для учебных целей: Изучить API камеры телефона,
+ *  изучить интеграцию модулей рекламы для монетизации приложений
+ */
 
 /**
  * Базовый класс главной активности
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         hideSystemUI();
         setContentView(R.layout.activity_main);
+        checkPermission();
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -95,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
-        checkPermission();
 
         mTextureView = findViewById(R.id.textureView);
         CameraHandler.mTextureView = mTextureView;
@@ -237,9 +242,10 @@ public class MainActivity extends AppCompatActivity {
     private void checkPermission() {
         if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET}, CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     /**

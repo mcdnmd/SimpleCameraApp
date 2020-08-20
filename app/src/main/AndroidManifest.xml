@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
 
     <application
@@ -18,10 +19,10 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5523319738235130~5555582077"/>
+            android:value="ca-app-pub-5523319738235130~5690225701"/>
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.kir.simplecameraapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

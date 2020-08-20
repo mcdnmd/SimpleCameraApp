@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">HD Photo Camera Pro</string>
+    <string name="banner_ad_main_activity">ca-app-pub-5523319738235130/5768448458</string>
+    <string name="banner_test_ad_main_activity">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adMob_app_id">ca-app-pub-5523319738235130~5690225701</string>
+    <string name="adMob_test_app_id">ca-app-pub-3940256099942544~3347511713</string>
+
+
 </resources>
